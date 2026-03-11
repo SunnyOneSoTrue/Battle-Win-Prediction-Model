@@ -1,4 +1,5 @@
 import csv
+import os
 from typing import List, Tuple
 
 class CSVParser:
@@ -23,11 +24,11 @@ class CSVParser:
         """Return all entries from the CSV file."""
         return self.data
     
-    def first_n(self, n: int) -> List[Tuple]:
+    def fetch_first_n(self, n: int) -> List[Tuple]:
         """Return the first n entries."""
         return self.data[:n]
     
-    def last_n(self, n: int) -> List[Tuple]:
+    def fetch_last_n(self, n: int) -> List[Tuple]:
         """Return the last n entries."""
         return self.data[-n:] if n > 0 else []
     
