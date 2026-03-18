@@ -6,8 +6,8 @@ Trains two different neural network architectures and compares their performance
 - Conservative: 34 → 48 → 24 → 1  (~2,881 parameters)
 """
 
-from csv_parser import CSVParser
-from battle_preprocessor import BattlePreprocessor
+from CSVParser import CSVParser
+from BattlelPreprocessor import BattlePreprocessor
 from data_utils import train_test_split, StandardScaler
 from neural_network import (
     NeuralNetwork,
@@ -17,8 +17,9 @@ from neural_network import (
     r_squared
 )
 from visualizations import create_all_visualizations
+from battlePredictor import BattlePredictor
 
-def train_and_evaluate_model(model_name: str, hidden_sizes: List[int],
+def train_and_evaluate_model(model_name: str, hidden_sizes: list[int],
                               X_train_scaled, y_train, X_test_scaled, y_test):
     """Train a single model and return its performance metrics."""
     print(f"\n{'=' * 70}")
@@ -221,6 +222,29 @@ def main():
     print(f"✓ Test R²: {max(metrics1['test_r2'], metrics2['test_r2']):.4f}")
     print(f"✓ Test RMSE: {min(metrics1['test_rmse'], metrics2['test_rmse']):.2f}%")
     print(f"✓ Predictions guaranteed in 0-100% range (sigmoid output)")
+    print(f"{'=' * 70}")
+    
+    # ═════════════════════════════════════════════════════════════════
+    # Save the best model
+    # ═════════════════════════════════════════════════════════════════
+    print(f"\n{'=' * 70}")
+    print("SAVING BEST MODEL")
+    print(f"{'=' * 70}")
+    
+    predictor = BattlePredictor()
+    predictor.model = best_model
+    predictor.scaler = scaler
+    predictor.feature_names = BattlePreprocessor.feature_names()
+    predictor.model_metadata = {
+        'architecture': best_name,
+        'test_r2': max(metrics1['test_r2'], metrics2['test_r2']),
+        'test_rmse': min(metrics1['test_rmse'], metrics2['test_rmse']),
+        'test_mae': min(metrics1['test_mae'], metrics2['test_mae']),
+        'train_samples': len(X_train),
+        'test_samples': len(X_test)
+    }
+    
+    predictor.save("battle_predictor_best.json")
     print(f"{'=' * 70}")
 
 

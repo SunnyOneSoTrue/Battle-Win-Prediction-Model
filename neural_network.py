@@ -324,6 +324,9 @@ class NeuralNetwork:
         """
         n_samples = len(X)
         
+        # Mark as fitted immediately so we can do validation predictions
+        self._is_fitted = True
+        
         for epoch in range(self.epochs):
             # Shuffle data
             indices = list(range(n_samples))
@@ -389,7 +392,6 @@ class NeuralNetwork:
                 else:
                     print(f"  Epoch {epoch+1:>3}/{self.epochs}   Train RMSE={rmse:>6.2f}%")
         
-        self._is_fitted = True
         return self
     
     # ═════════════════════════════════════════════════════════════════
